@@ -1,15 +1,23 @@
 using NodeCanvas.Framework;
 using NodeCanvas.Tasks.Conditions;
 using ParadoxNotion.Design;
+using UnityEngine;
 
 
 namespace NodeCanvas.Tasks.Actions {
 
 	public class MoveToGarbageAT : ActionTask {
 
-		//Use for initialization. This is called only once in the lifetime of the task.
-		//Return null if init was successfull. Return an error string otherwise
-		protected override string OnInit() {
+		private GameObject spawnedGarbage;
+
+		public BBParameter<float> garbagePickupDistance;
+        public BBParameter<float> moveToGarbageSpeed;
+
+		public BBParameter<Vector3> cameraOffset;
+
+        //Use for initialization. This is called only once in the lifetime of the task.
+        //Return null if init was successfull. Return an error string otherwise
+        protected override string OnInit() {
 			return null;
 		}
 
@@ -20,11 +28,40 @@ namespace NodeCanvas.Tasks.Actions {
 		{
 			// Reset the timer from found garbage class back to 0
 			FoundGarbageCT.timer = 0.0f;
+
+			// Set the private gameobject to find the garbage somewhere in the scene
+			spawnedGarbage = GameObject.FindWithTag("Garbage");
+
+			// However, end this action if the garbage object isn't found in the scene
+			if (!spawnedGarbage)
+			{
+				EndAction(true);
+			}
 		}
 
 		//Called once per frame while the action is active.
-		protected override void OnUpdate() {
-			
+		protected override void OnUpdate() 
+		{
+			// Move towards the spawned garbage object
+			agent.transform.position += (spawnedGarbage.transform.position - agent.transform.position) 
+				* moveToGarbageSpeed.value * Time.deltaTime;
+
+			// Make the camera follow the garbage collector around by adding camera offset
+            Camera.main.transform.position = agent.transform.position + cameraOffset.value;
+
+            // Get the distance between the garbage collector and the garbage itself
+            float distanceFromGarbage = Vector3.Distance(agent.transform.position, spawnedGarbage.transform.position);
+
+			/* If the distance from garbage is less than the garbage pickup distance, make the garbage collector pick
+			up the garbage */
+            if (distanceFromGarbage <= garbagePickupDistance.value)
+			{
+				// Attach the spawned garbage to the garbage collector
+				spawnedGarbage.transform.SetParent(agent.transform);
+
+				// End this action
+				EndAction(true);
+			}
 		}
 
 		//Called when the task is disabled.
