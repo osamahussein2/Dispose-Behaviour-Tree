@@ -6,15 +6,13 @@ namespace NodeCanvas.Tasks.Actions {
 
 	public class MoveToPlayerAT : ActionTask {
 		
-		public BBParameter<GameObject> garbageCollector;
-		public BBParameter<float> castleGuardChaseSpeed;
-		public BBParameter<float> castleGuardRadius;
 		private float timer;
-		public BBParameter<GameObject> exclamationMark;
 
-		//Use for initialization. This is called only once in the lifetime of the task.
-		//Return null if init was successfull. Return an error string otherwise
-		protected override string OnInit()
+        public BBParameter<CastleGuardData> castleGuardData;
+
+        //Use for initialization. This is called only once in the lifetime of the task.
+        //Return null if init was successfull. Return an error string otherwise
+        protected override string OnInit()
 		{
 			return null;
 		}
@@ -27,8 +25,8 @@ namespace NodeCanvas.Tasks.Actions {
 			// Set the timer to 0 every time this action executes
 			timer = 0.0f;
 
-			// Make sure the exclamation mark is turned on
-			exclamationMark.value.SetActive(true);
+            // Make sure the exclamation mark is turned on
+            castleGuardData.value.exclamationMark.SetActive(true);
 		}
 
 		//Called once per frame while the action is active.
@@ -39,17 +37,16 @@ namespace NodeCanvas.Tasks.Actions {
 
 			if (timer >= 1.0f)
 			{
-				// Turn off excalamation mark after 1 second has passed
-				exclamationMark.value.SetActive(false);
+                // Turn off excalamation mark after 1 second has passed
+                castleGuardData.value.exclamationMark.SetActive(false);
 			}
 
 			// Move towards the garbage collector
-			agent.transform.position += (garbageCollector.value.transform.position - agent.transform.position) *
-				castleGuardChaseSpeed.value * Time.deltaTime;
+			agent.transform.position += (castleGuardData.value.garbageCollector.transform.position - agent.transform.position) *
+				castleGuardData.value.castleGuardChaseSpeed * Time.deltaTime;
 
-			// If the garbage collector is far enough from the castle guard, end this action
-			if (Vector3.Distance(agent.transform.position, garbageCollector.value.transform.position) >
-				castleGuardRadius.value)
+			if (Vector3.Distance(agent.transform.position, castleGuardData.value.garbageCollector.transform.position) <=
+				castleGuardData.value.meleeAttackRange)
 			{
 				EndAction(true);
 			}

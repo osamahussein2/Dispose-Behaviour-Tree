@@ -9,14 +9,13 @@ namespace NodeCanvas.Tasks.Conditions {
 	public class PlayerInRangeCT : ConditionTask
 	{
 		private Blackboard castleGuardBlackboard;
-		public BBParameter<float> castleGuardRadius;
-		public BBParameter<LayerMask> collector;
 		private bool playerFound;
-		public BBParameter<GameObject> exclamationMark;
 
-		//Use for initialization. This is called only once in the lifetime of the task.
-		//Return null if init was successfull. Return an error string otherwise
-		protected override string OnInit()
+        public BBParameter<CastleGuardData> castleGuardData;
+
+        //Use for initialization. This is called only once in the lifetime of the task.
+        //Return null if init was successfull. Return an error string otherwise
+        protected override string OnInit()
 		{
 			return null;
 		}
@@ -33,7 +32,7 @@ namespace NodeCanvas.Tasks.Conditions {
 
 			castleGuardBlackboard.SetVariableValue("PlayerFound", playerFound);
 
-			exclamationMark.value.SetActive(true);
+            castleGuardData.value.exclamationMark.SetActive(true);
 		}
 
 		//Called whenever the condition gets disabled.
