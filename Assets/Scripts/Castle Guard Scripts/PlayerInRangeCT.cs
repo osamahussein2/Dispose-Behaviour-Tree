@@ -50,8 +50,23 @@ namespace NodeCanvas.Tasks.Conditions {
 		protected override bool OnCheck()
 		{
             // Check if the player and castle guard's distance is within the castle guard's radius
-            if (Vector3.Distance(agent.transform.position,
-                castleGuardData.value.garbageCollector.transform.position) <= castleGuardData.value.castleGuardRadius)
+            /* Detect the sphere overlap between the castle guard and the garbage collector's layer mask to determine
+			if it's within the castle guard's radius */
+            Collider[] castleGuardColliders = Physics.OverlapSphere(agent.transform.position, castleGuardData.value.castleGuardRadius,
+                 castleGuardData.value.collector);
+
+            // If there are no target colldiers in the array
+            if (castleGuardColliders.Length == 0)
+            {
+                // Make sure player found bool is set to false
+                playerFound = castleGuardBlackboard.GetVariableValue<bool>("PlayerFound");
+                playerFound = false;
+
+                castleGuardBlackboard.SetVariableValue("PlayerFound", playerFound);
+            }
+
+            // Once it gets the target colliders
+            foreach (Collider collider in castleGuardColliders)
             {
                 // Make sure player found bool is set to true
                 playerFound = castleGuardBlackboard.GetVariableValue<bool>("PlayerFound");
@@ -59,19 +74,7 @@ namespace NodeCanvas.Tasks.Conditions {
 
                 castleGuardBlackboard.SetVariableValue("PlayerFound", playerFound);
 
-                castleGuardData.value.exclamationMark.SetActive(true);
-            }
-
-            // Check if the player and castle guard's distance is not within the castle guard's radius
-            else
-            {
-                // Make sure player found bool is set to false
-                playerFound = castleGuardBlackboard.GetVariableValue<bool>("PlayerFound");
-                playerFound = false;
-
-                castleGuardBlackboard.SetVariableValue("PlayerFound", playerFound);
-
-                castleGuardData.value.exclamationMark.SetActive(false);
+                // And hide the question mark afterwards
                 castleGuardData.value.questionMark.SetActive(false);
             }
 

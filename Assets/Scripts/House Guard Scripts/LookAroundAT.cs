@@ -36,15 +36,19 @@ namespace NodeCanvas.Tasks.Actions {
 		//Called once per frame while the action is active.
 		protected override void OnUpdate()
 		{
-			LookAroundLogic();
+            DecreaseInteractionLevel();
+            LookAroundLogic();
 			ChangeRotationDirection();
 			SeenPlayer();
-		}
+        }
 
 		private void LookAroundLogic()
 		{
 			// Increment the timer to rotate the house guard to look around or stop looking (focus on one direction)
 			timer += Time.deltaTime;
+
+			agent.transform.position += (houseGuardData.value.houseLocation.transform.position -
+				agent.transform.position) * houseGuardData.value.houseGuardSpeed * Time.deltaTime;
 
 			// Rotate the house guard to look around
 			if (timer >= 0.0f && timer <= houseGuardData.value.lookAroundTime)
@@ -89,9 +93,28 @@ namespace NodeCanvas.Tasks.Actions {
 
 			foreach (Collider collider in houseGuardColliders)
 			{
-				EndAction(true);
+                if (Vector3.Distance(agent.transform.position, houseGuardData.value.houseLocation.transform.position)
+                <= 0.05f)
+				{
+                    EndAction(true);
+				}
 			}
 		}
+
+		private void DecreaseInteractionLevel()
+		{
+            /* Decrease the interaction slider values for both house and castle guards once it reaches close
+			to the house location */
+            if (Vector3.Distance(agent.transform.position, houseGuardData.value.houseLocation.transform.position)
+				<= 0.05f)
+			{
+				houseGuardData.value.houseGuardInteractionSlider.value -=
+				houseGuardData.value.houseGuardInteractionDecreaseRate * Time.deltaTime;
+
+				houseGuardData.value.castleGuardInteractionSlider.value -=
+					houseGuardData.value.castleGuardInteractionDecreaseRate * Time.deltaTime;
+			}
+        }
 
 		//Called when the task is disabled.
 		protected override void OnStop() {

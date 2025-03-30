@@ -27,7 +27,13 @@ namespace NodeCanvas.Tasks.Actions {
 
             // Make sure the exclamation mark is turned on
             castleGuardData.value.exclamationMark.SetActive(true);
-		}
+
+			// Just in case if question mark is still active, hide it
+			if (castleGuardData.value.questionMark.activeInHierarchy == true)
+			{
+				castleGuardData.value.questionMark.SetActive(false);
+			}
+        }
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate()

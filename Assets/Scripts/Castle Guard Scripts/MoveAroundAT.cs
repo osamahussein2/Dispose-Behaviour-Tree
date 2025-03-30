@@ -38,6 +38,8 @@ namespace NodeCanvas.Tasks.Actions {
             castleGuardData.value.questionMark.SetActive(false);
             castleGuardData.value.exclamationMark.SetActive(false);
             castleGuardData.value.hitAlert.SetActive(false);
+
+			agent.transform.rotation = Quaternion.identity;
         }
 
 		//Called once per frame while the action is active.
@@ -70,31 +72,23 @@ namespace NodeCanvas.Tasks.Actions {
 				}
 			}
 
-			// If the garbage collector and the castle guard distance is less than the castle guard's warning value
-			if (Vector3.Distance(agent.transform.position, castleGuardData.value.garbageCollector.transform.position) <=
-                 castleGuardData.value.castleGuardWarning)
-			{
+            /* Detect the sphere overlap between the castle guard and the garbage collector's layer mask to determine
+            if it's within the castle guard's warning */
+            Collider[] castleGuardColliders = Physics.OverlapSphere(agent.transform.position, 
+				castleGuardData.value.castleGuardWarning, castleGuardData.value.collector);
+
+			// If the colliders are not found, hide the question mark
+            if (castleGuardColliders.Length == 0)
+            {
+                castleGuardData.value.questionMark.SetActive(false);
+            }
+
+            // Once it gets the target colliders, show the question mark
+            foreach (Collider collider in castleGuardColliders)
+            {
                 // Activate the question mark above their head
                 castleGuardData.value.questionMark.SetActive(true);
-			}
-
-			else
-			{
-                // Else hide the question mark
-                castleGuardData.value.questionMark.SetActive(false);
-			}
-
-			/* Detect the sphere overlap between the castle guard and the garbage collector's layer mask to determine
-			if it's within the castle guard's radius */
-			Collider[] castleGuardColliders = Physics.OverlapSphere(agent.transform.position, castleGuardData.value.castleGuardRadius,
-                 castleGuardData.value.collector);
-
-			// Once it gets the collider, hide the question mark and end this action
-			foreach (Collider collider in castleGuardColliders)
-			{
-                castleGuardData.value.questionMark.SetActive(false);
-				EndAction(true);
-			}
+            }
 		}
 
 		//Called when the task is disabled.

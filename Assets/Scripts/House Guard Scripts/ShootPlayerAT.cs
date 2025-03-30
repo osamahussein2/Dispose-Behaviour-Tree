@@ -28,7 +28,8 @@ namespace NodeCanvas.Tasks.Actions {
 		//Called once per frame while the action is active.
 		protected override void OnUpdate()
 		{
-			InstantiateBullets();
+			DecreaseInteractionLevel();
+            InstantiateBullets();
             RotateToLookAtPlayer();
             FarAwayFromPlayer();
         }
@@ -73,9 +74,20 @@ namespace NodeCanvas.Tasks.Actions {
 			if (Vector3.Distance(agent.transform.position, houseGuardData.value.player.transform.position) >= 
 				houseGuardData.value.houseGuardRadius)
 			{
-				EndAction(true);
+                Object.Destroy(bullet);
+                EndAction(true);
 			}
 		}
+
+		private void DecreaseInteractionLevel()
+		{
+			// Decrease the interaction slider values for both house and castle guards
+            houseGuardData.value.houseGuardInteractionSlider.value -=
+                houseGuardData.value.houseGuardInteractionDecreaseRate * Time.deltaTime;
+
+            houseGuardData.value.castleGuardInteractionSlider.value -=
+                houseGuardData.value.castleGuardInteractionDecreaseRate * Time.deltaTime;
+        }
 
 		//Called when the task is disabled.
 		protected override void OnStop() {
