@@ -41,18 +41,18 @@ namespace NodeCanvas.Tasks.Actions {
                 castleGuardData.value.exclamationMark.SetActive(false);
 			}
 
+			// Make sure to end this action after the castle guard is near the player for melee combat
 			if (Vector3.Distance(agent.transform.position, castleGuardData.value.garbageCollector.transform.position) <=
 				castleGuardData.value.meleeAttackRange)
 			{
-                agent.transform.position += Vector3.zero;
-
                 EndAction(true);
 			}
 
+			// Otherwise, keep moving towards the player
 			else
 			{
-                agent.transform.position += (castleGuardData.value.garbageCollector.transform.position - agent.transform.position) *
-                castleGuardData.value.castleGuardChaseSpeed * Time.deltaTime;
+                agent.transform.position += (castleGuardData.value.garbageCollector.transform.position - 
+					agent.transform.position) *  castleGuardData.value.castleGuardChaseSpeed * Time.deltaTime;
             }
 		}
 

@@ -49,7 +49,7 @@ namespace NodeCanvas.Tasks.Actions {
 			{
 				// Get and set the random point using its blackboard component
 				randomPoint = castleGuardBlackboard.GetVariableValue<Vector3>("RandomPoint");
-				randomPoint = new Vector3(Random.Range(3, 6), 0.0f, Random.Range(3, 6));
+				randomPoint = new Vector3(Random.Range(4.5f, 8f), 0.0f, Random.Range(3f, 6f));
 
 				castleGuardBlackboard.SetVariableValue("RandomPoint", randomPoint);
 
