@@ -7,12 +7,7 @@ namespace NodeCanvas.Tasks.Actions {
 
     public class ShootPlayerAT : ActionTask {
 
-        public BBParameter<float> houseGuardRadius;
-		public BBParameter<GameObject> player;
-        public BBParameter<float> rotationSpeed;
-		public BBParameter<GameObject> bulletPrefab;
-		public BBParameter<float> bulletSpeed;
-		public BBParameter<float> bulletFireCooldownTimer;
+		public BBParameter<HouseGuardData> houseGuardData;
 		private GameObject bullet;
 		private float timer;
 
@@ -42,9 +37,9 @@ namespace NodeCanvas.Tasks.Actions {
 		{
             timer += Time.deltaTime;
 
-			if (timer >= bulletFireCooldownTimer.value)
+			if (timer >= houseGuardData.value.bulletFireCooldownTimer)
 			{
-				bullet = Object.Instantiate(bulletPrefab.value, agent.transform.position, 
+				bullet = Object.Instantiate(houseGuardData.value.bulletPrefab, agent.transform.position, 
 					agent.transform.rotation);
 
                 timer = 0.0f;
@@ -52,10 +47,10 @@ namespace NodeCanvas.Tasks.Actions {
 
 			if (bullet != null)
 			{
-				bullet.transform.position += (player.value.transform.position - bullet.transform.position) *
-					bulletSpeed.value * Time.deltaTime;
+				bullet.transform.position += (houseGuardData.value.player.transform.position - 
+					bullet.transform.position) * houseGuardData.value.bulletSpeed * Time.deltaTime;
 
-				if (Vector3.Distance(player.value.transform.position, bullet.transform.position) <= 0.2f)
+				if (Vector3.Distance(houseGuardData.value.player.transform.position, bullet.transform.position) <= 0.2f)
 				{
 					Object.Destroy(bullet);
 				}
@@ -66,16 +61,17 @@ namespace NodeCanvas.Tasks.Actions {
 
 		private void RotateToLookAtPlayer()
 		{
-            Quaternion lookRotation = Quaternion.LookRotation(-(player.value.transform.position - 
+            Quaternion lookRotation = Quaternion.LookRotation(-(houseGuardData.value.player.transform.position - 
 				agent.transform.position).normalized);
 
             agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, lookRotation, 
-				Time.deltaTime * rotationSpeed.value);
+				Time.deltaTime * houseGuardData.value.rotationSpeed);
         }
 
 		private void FarAwayFromPlayer()
 		{
-			if (Vector3.Distance(agent.transform.position, player.value.transform.position) >= houseGuardRadius.value)
+			if (Vector3.Distance(agent.transform.position, houseGuardData.value.player.transform.position) >= 
+				houseGuardData.value.houseGuardRadius)
 			{
 				EndAction(true);
 			}

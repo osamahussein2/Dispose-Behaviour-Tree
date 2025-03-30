@@ -7,15 +7,11 @@ namespace NodeCanvas.Tasks.Actions {
 
 	public class LookAroundAT : ActionTask {
 
-		public BBParameter<float> rotationSpeed;
+		public BBParameter<HouseGuardData> houseGuardData;
 
-		public BBParameter<float> lookAroundTime;
 		private float timer;
-		public BBParameter<float> rotationThreshold;
 		private bool playerFound;
 		private Blackboard houseGuardBlackboard;
-		public BBParameter<float> houseGuardRadius;
-		public BBParameter<LayerMask> collectorMask;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -51,19 +47,21 @@ namespace NodeCanvas.Tasks.Actions {
 			timer += Time.deltaTime;
 
 			// Rotate the house guard to look around
-			if (timer >= 0.0f && timer <= lookAroundTime.value)
+			if (timer >= 0.0f && timer <= houseGuardData.value.lookAroundTime)
 			{
-				agent.transform.eulerAngles += new Vector3(0.0f, rotationSpeed.value * Time.deltaTime, 0.0f);
+				agent.transform.eulerAngles += new Vector3(0.0f, houseGuardData.value.rotationSpeed * Time.deltaTime, 
+					0.0f);
 			}
 
 			// Stop rotating the house guard to make sure they look in one direction
-			else if (timer > lookAroundTime.value && timer <= lookAroundTime.value * 2.0f)
+			else if (timer > houseGuardData.value.lookAroundTime && 
+				timer <= houseGuardData.value.lookAroundTime * 2.0f)
 			{
 				agent.transform.eulerAngles += new Vector3(0.0f, 0.0f, 0.0f);
 			}
 
 			// Set the timer back to 0 after it exceeds whatever the look around time is times 2
-			if (timer > lookAroundTime.value * 2.0f)
+			if (timer > houseGuardData.value.lookAroundTime * 2.0f)
 			{
 				timer = 0.0f;
 			}
@@ -72,22 +70,22 @@ namespace NodeCanvas.Tasks.Actions {
 		private void ChangeRotationDirection()
 		{
 			// Make the house guard look the other way if it exceeds an angle
-			if (agent.transform.eulerAngles.y >= rotationThreshold.value)
+			if (agent.transform.eulerAngles.y >= houseGuardData.value.rotationThreshold)
 			{
-				rotationSpeed.value = -rotationSpeed.value;
+                houseGuardData.value.rotationSpeed = -houseGuardData.value.rotationSpeed;
 			}
 
 			// Make the house guard look the other way if it's below an angle
-			else if (agent.transform.eulerAngles.y <= -rotationThreshold.value)
+			else if (agent.transform.eulerAngles.y <= -houseGuardData.value.rotationThreshold)
 			{
-				rotationSpeed.value = rotationSpeed.value;
+                houseGuardData.value.rotationSpeed = houseGuardData.value.rotationSpeed;
 			}
 		}
 
 		private void SeenPlayer()
 		{
-			Collider[] houseGuardColliders = Physics.OverlapSphere(agent.transform.position, houseGuardRadius.value,
-				collectorMask.value);
+			Collider[] houseGuardColliders = Physics.OverlapSphere(agent.transform.position, 
+				houseGuardData.value.houseGuardRadius, houseGuardData.value.collectorMask);
 
 			foreach (Collider collider in houseGuardColliders)
 			{

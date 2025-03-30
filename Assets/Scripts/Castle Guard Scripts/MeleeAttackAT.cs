@@ -34,9 +34,9 @@ namespace NodeCanvas.Tasks.Actions {
             if (Vector3.Distance(agent.transform.position, castleGuardData.value.garbageCollector.transform.position) <=
                 castleGuardData.value.meleeAttackRange)
             {
-				timer += Time.deltaTime;
+                timer += Time.deltaTime;
 
-				agent.transform.position += Vector3.zero;
+                agent.transform.position += Vector3.zero;
 
                 Quaternion lookRotation = Quaternion.LookRotation(-(castleGuardData.value.garbageCollector.transform.position -
                 agent.transform.position).normalized);
@@ -44,15 +44,27 @@ namespace NodeCanvas.Tasks.Actions {
                 agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, lookRotation,
                     Time.deltaTime);
 
+                if (agent.transform.rotation.x <= 0 || agent.transform.rotation.x > 0)
+                {
+                    agent.transform.rotation = new Quaternion(0.0f, agent.transform.rotation.y,
+                        agent.transform.rotation.z, agent.transform.rotation.w);
+                }
+
                 if (timer >= 2.0f)
-				{
+                {
                     // Make the sword appear in their hand
-					sword = Object.Instantiate(castleGuardData.value.swordPrefab, agent.transform.position, Quaternion.identity);
+                    sword = Object.Instantiate(castleGuardData.value.swordPrefab, agent.transform.position, Quaternion.identity);
 
                     castleGuardData.value.hitAlert.SetActive(true); // Show the hit alert above the player
 
                     timer = 0.0f;
-				}
+                }
+            }
+
+            else if (Vector3.Distance(agent.transform.position,
+                castleGuardData.value.garbageCollector.transform.position) >= castleGuardData.value.castleGuardRadius)
+            {
+                EndAction(true);
             }
 
             // If sword is not invalid, move the sword with the guard's hand and rotate it as if they're attacking the player

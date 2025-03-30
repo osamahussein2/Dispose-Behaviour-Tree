@@ -41,15 +41,19 @@ namespace NodeCanvas.Tasks.Actions {
                 castleGuardData.value.exclamationMark.SetActive(false);
 			}
 
-			// Move towards the garbage collector
-			agent.transform.position += (castleGuardData.value.garbageCollector.transform.position - agent.transform.position) *
-				castleGuardData.value.castleGuardChaseSpeed * Time.deltaTime;
-
 			if (Vector3.Distance(agent.transform.position, castleGuardData.value.garbageCollector.transform.position) <=
 				castleGuardData.value.meleeAttackRange)
 			{
-				EndAction(true);
+                agent.transform.position += Vector3.zero;
+
+                EndAction(true);
 			}
+
+			else
+			{
+                agent.transform.position += (castleGuardData.value.garbageCollector.transform.position - agent.transform.position) *
+                castleGuardData.value.castleGuardChaseSpeed * Time.deltaTime;
+            }
 		}
 
 		//Called when the task is disabled.
