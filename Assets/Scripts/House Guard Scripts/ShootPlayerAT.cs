@@ -22,6 +22,7 @@ namespace NodeCanvas.Tasks.Actions {
 		//EndAction can be called from anywhere.
 		protected override void OnExecute()
 		{
+            // Make sure timer is set to 0 after executing this task
             timer = 0.0f;
         }
 
@@ -36,32 +37,37 @@ namespace NodeCanvas.Tasks.Actions {
 
 		private void InstantiateBullets()
 		{
-            timer += Time.deltaTime;
+            timer += Time.deltaTime; // Increment the timer
 
+			// Spawn the bullet after the timer exceeds the firing cooldown time
 			if (timer >= houseGuardData.value.bulletFireCooldownTimer)
 			{
 				bullet = Object.Instantiate(houseGuardData.value.bulletPrefab, agent.transform.position, 
 					agent.transform.rotation);
 
-                timer = 0.0f;
+                timer = 0.0f; // Reset timer to 0
 			}
 
+			// If a bullet has spawned, move it towards the player
 			if (bullet != null)
 			{
 				bullet.transform.position += (houseGuardData.value.player.transform.position - 
 					bullet.transform.position) * houseGuardData.value.bulletSpeed * Time.deltaTime;
 
+				// If the bullet is close enough to the player, destroy it
 				if (Vector3.Distance(houseGuardData.value.player.transform.position, bullet.transform.position) <= 0.2f)
 				{
 					Object.Destroy(bullet);
 				}
 
+				// Destroy the bullet in 3 seconds just in case if it doesn't destroy at all
                 Object.Destroy(bullet, 3.0f);
             }
         }
 
 		private void RotateToLookAtPlayer()
 		{
+			// Rotate the house guard to look at the player when shooting them
             Quaternion lookRotation = Quaternion.LookRotation(-(houseGuardData.value.player.transform.position - 
 				agent.transform.position).normalized);
 
@@ -71,11 +77,12 @@ namespace NodeCanvas.Tasks.Actions {
 
 		private void FarAwayFromPlayer()
 		{
+			// If the house guard and player distance is far from the house guard's radius, destroy bullets
 			if (Vector3.Distance(agent.transform.position, houseGuardData.value.player.transform.position) >= 
 				houseGuardData.value.houseGuardRadius)
 			{
                 Object.Destroy(bullet);
-                EndAction(true);
+                EndAction(true); // And end this action too
 			}
 		}
 

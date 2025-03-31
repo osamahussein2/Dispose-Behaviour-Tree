@@ -7,18 +7,11 @@ namespace NodeCanvas.Tasks.Actions {
 
 	public class ThrowGarbageAT : ActionTask {
 
-        public BBParameter<GameObject> garbageBin;
+        public BBParameter<GarbageCollectorData> garbageCollectorData;
 
-		public BBParameter<float> moveToGarbageBinSpeed;
-        public BBParameter<float> garbageBinDistance;
-
-		private GameObject spawnedGarbage;
-
-        public BBParameter<Vector3> cameraOffset;
+        private GameObject spawnedGarbage;
 
         private GameObject topOfBin;
-
-        public BBParameter<float> garbageFallSpeed;
 
         private bool isGarbageFallingIntoBin;
 
@@ -37,7 +30,7 @@ namespace NodeCanvas.Tasks.Actions {
             spawnedGarbage = GameObject.FindWithTag("Garbage");
 
             // Get the child of the garbage bin object to set the top bin
-            topOfBin = garbageBin.value.transform.GetChild(0).gameObject;
+            topOfBin = garbageCollectorData.value.garbageBin.transform.GetChild(0).gameObject;
 
             // Set the top bin to be positioned just above the top of garbage bin
             topOfBin.transform.localPosition = new Vector3(0.0f, 0.65f, 0.0f);
@@ -56,14 +49,15 @@ namespace NodeCanvas.Tasks.Actions {
 		protected override void OnUpdate() 
 		{
             // Make the camera follow the garbage collector around by adding camera offset
-            Camera.main.transform.position = agent.transform.position + cameraOffset.value;
+            Camera.main.transform.position = agent.transform.position + garbageCollectorData.value.cameraOffset;
 
             // Get the distance between the garbage collector and the garbage bin
-            float distanceFromBin = Vector3.Distance(agent.transform.position, garbageBin.value.transform.position);
+            float distanceFromBin = Vector3.Distance(agent.transform.position, 
+                garbageCollectorData.value.garbageBin.transform.position);
 
             /* If the distance from garbage bin is less than the garbage bin distance, make the garbage collector throw
 			out the garbage */
-            if (distanceFromBin <= garbageBinDistance.value)
+            if (distanceFromBin <= garbageCollectorData.value.garbageBinDistance)
             {
                 // Stop moving the garbage collector
                 agent.transform.position += new Vector3(0.0f, 0.0f, 0.0f);
@@ -94,8 +88,8 @@ namespace NodeCanvas.Tasks.Actions {
             else
             {
                 // Move towards the garbage bin after picking up the garbage from the last action
-                agent.transform.position += (garbageBin.value.transform.position - agent.transform.position)
-                    * moveToGarbageBinSpeed.value * Time.deltaTime;
+                agent.transform.position += (garbageCollectorData.value.garbageBin.transform.position - 
+                    agent.transform.position) * garbageCollectorData.value.garbageCollectorSpeed * Time.deltaTime;
             }
 
             // Make sure the top bin doesn't move when either the bool is false or is less than 0 in y position
@@ -107,8 +101,8 @@ namespace NodeCanvas.Tasks.Actions {
             // Otherwise, lower top bin to act as if the garbage is thrown into the bin
             else
             {
-                topOfBin.transform.position += (garbageBin.value.transform.position - topOfBin.transform.position) 
-                    * garbageFallSpeed.value * Time.deltaTime;
+                topOfBin.transform.position += (garbageCollectorData.value.garbageBin.transform.position - 
+                    topOfBin.transform.position) * garbageCollectorData.value.garbageFallSpeed * Time.deltaTime;
             }
         }
 

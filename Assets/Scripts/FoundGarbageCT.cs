@@ -12,12 +12,10 @@ namespace NodeCanvas.Tasks.Conditions {
 
 		private float maxSpawnTime;
 
-		// Use the blackboard parameters I created
-		public BBParameter<List<float>> garbageSpawnTime;
-		public BBParameter<GameObject> garbage;
-		public BBParameter<List<Vector3>> garbageSpawnPoint;
+        // Use the blackboard parameters I created
+        public BBParameter<GarbageCollectorData> garbageCollectorData;
 
-		private Vector3 randomSpawnPoint;
+        private Vector3 randomSpawnPoint;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -36,12 +34,18 @@ namespace NodeCanvas.Tasks.Conditions {
             timer += Time.deltaTime;
 
             // Randomize the max spawn time
-            maxSpawnTime = Random.Range(garbageSpawnTime.value[0], garbageSpawnTime.value[1]);
+            maxSpawnTime = Random.Range(garbageCollectorData.value.garbageSpawnTime[0], 
+				garbageCollectorData.value.garbageSpawnTime[1]);
 
 			// Randomize the garbage spawn point
-			randomSpawnPoint = new Vector3(Random.Range(garbageSpawnPoint.value[0].x, garbageSpawnPoint.value[1].x),
-				Random.Range(garbageSpawnPoint.value[0].y, garbageSpawnPoint.value[1].y), 
-				Random.Range(garbageSpawnPoint.value[0].z, garbageSpawnPoint.value[1].z));
+			randomSpawnPoint = new Vector3(Random.Range(garbageCollectorData.value.garbageSpawnPoint[0].x,
+                garbageCollectorData.value.garbageSpawnPoint[1].x), 
+
+				Random.Range(garbageCollectorData.value.garbageSpawnPoint[0].y, 
+				garbageCollectorData.value.garbageSpawnPoint[1].y), 
+
+				Random.Range(garbageCollectorData.value.garbageSpawnPoint[0].z, 
+				garbageCollectorData.value.garbageSpawnPoint[1].z));
 		}
 
 		//Called whenever the condition gets disabled.
@@ -56,7 +60,7 @@ namespace NodeCanvas.Tasks.Conditions {
 			// Instantiate the garbage in the scene after the timer exceeds the randomized spawn time
 			if (timer >= maxSpawnTime)
 			{
-				Object.Instantiate(garbage.value, randomSpawnPoint, Quaternion.identity);
+				Object.Instantiate(garbageCollectorData.value.garbagePrefab, randomSpawnPoint, Quaternion.identity);
 			}
 
 			// End the condition task once a garbage object is found in the scene using its tag

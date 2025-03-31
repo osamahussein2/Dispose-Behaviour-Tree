@@ -10,10 +10,7 @@ namespace NodeCanvas.Tasks.Actions {
 
 		private GameObject spawnedGarbage;
 
-		public BBParameter<float> garbagePickupDistance;
-        public BBParameter<float> moveToGarbageSpeed;
-
-		public BBParameter<Vector3> cameraOffset;
+        public BBParameter<GarbageCollectorData> garbageCollectorData;
 
         //Use for initialization. This is called only once in the lifetime of the task.
         //Return null if init was successfull. Return an error string otherwise
@@ -44,17 +41,17 @@ namespace NodeCanvas.Tasks.Actions {
 		{
 			// Move towards the spawned garbage object
 			agent.transform.position += (spawnedGarbage.transform.position - agent.transform.position) 
-				* moveToGarbageSpeed.value * Time.deltaTime;
+				* garbageCollectorData.value.garbageCollectorSpeed * Time.deltaTime;
 
 			// Make the camera follow the garbage collector around by adding camera offset
-            Camera.main.transform.position = agent.transform.position + cameraOffset.value;
+            Camera.main.transform.position = agent.transform.position + garbageCollectorData.value.cameraOffset;
 
             // Get the distance between the garbage collector and the garbage itself
             float distanceFromGarbage = Vector3.Distance(agent.transform.position, spawnedGarbage.transform.position);
 
 			/* If the distance from garbage is less than the garbage pickup distance, make the garbage collector pick
 			up the garbage */
-            if (distanceFromGarbage <= garbagePickupDistance.value)
+            if (distanceFromGarbage <= garbageCollectorData.value.garbagePickupDistance)
 			{
 				// Attach the spawned garbage to the garbage collector
 				spawnedGarbage.transform.SetParent(agent.transform);
