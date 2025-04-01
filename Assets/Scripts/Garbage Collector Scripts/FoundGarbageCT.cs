@@ -46,7 +46,9 @@ namespace NodeCanvas.Tasks.Conditions {
 
 				Random.Range(garbageCollectorData.value.garbageSpawnPoint[0].z, 
 				garbageCollectorData.value.garbageSpawnPoint[1].z));
-		}
+
+            garbageCollectorData.value.playerStateText.text = "Player State: Finding garbage";
+        }
 
 		//Called whenever the condition gets disabled.
 		protected override void OnDisable() {

@@ -27,4 +27,5 @@ public class HouseGuardData : MonoBehaviour
     public float lowInteractionLevelValue;
     public GameObject houseLocation;
     public float houseGuardSpeed;
+    public Text houseGuardStateText;
 }

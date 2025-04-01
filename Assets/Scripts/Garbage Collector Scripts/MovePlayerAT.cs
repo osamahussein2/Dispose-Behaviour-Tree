@@ -24,7 +24,9 @@ namespace NodeCanvas.Tasks.Actions {
 			{
 				Object.Destroy(GameObject.FindWithTag("Garbage"));
 			}
-		}
+
+            garbageCollectorData.value.playerStateText.text = "Player State: Moving by player input";
+        }
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() 

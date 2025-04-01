@@ -24,6 +24,8 @@ namespace NodeCanvas.Tasks.Actions {
 		{
             // Make sure timer is set to 0 after executing this task
             timer = 0.0f;
+
+            houseGuardData.value.houseGuardStateText.text = "House Guard State: Shooting player";
         }
 
 		//Called once per frame while the action is active.

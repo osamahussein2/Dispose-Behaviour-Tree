@@ -43,6 +43,8 @@ namespace NodeCanvas.Tasks.Actions {
             {
                 EndAction(true);
             }
+
+            garbageCollectorData.value.playerStateText.text = "Player State: Throwing out garbage";
         }
 
 		//Called once per frame while the action is active.

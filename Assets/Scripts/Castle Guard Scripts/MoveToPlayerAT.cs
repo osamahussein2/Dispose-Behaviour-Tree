@@ -33,6 +33,8 @@ namespace NodeCanvas.Tasks.Actions {
 			{
 				castleGuardData.value.questionMark.SetActive(false);
 			}
+
+            castleGuardData.value.castleGuardStateText.text = "Castle Guard State: Moving towards player";
         }
 
 		//Called once per frame while the action is active.

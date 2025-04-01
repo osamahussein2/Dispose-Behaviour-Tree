@@ -31,7 +31,9 @@ namespace NodeCanvas.Tasks.Actions {
 			playerFound = false;
 			
 			houseGuardBlackboard.SetVariableValue("PlayerFound", playerFound);
-		}
+
+            houseGuardData.value.houseGuardStateText.text = "House Guard State: Looking around";
+        }
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate()

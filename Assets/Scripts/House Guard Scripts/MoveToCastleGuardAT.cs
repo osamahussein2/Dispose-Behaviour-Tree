@@ -21,6 +21,7 @@ namespace NodeCanvas.Tasks.Actions {
 		//EndAction can be called from anywhere.
 		protected override void OnExecute()
 		{
+			houseGuardData.value.houseGuardStateText.text = "House Guard State: Moving to castle guard";
 		}
 
 		//Called once per frame while the action is active.
@@ -30,8 +31,10 @@ namespace NodeCanvas.Tasks.Actions {
 			if (Vector3.Distance(agent.transform.position, houseGuardData.value.castleGuard.transform.position) <=
 				houseGuardData.value.distanceToCastleGuard)
 			{
-				// Don't move the house guard
-				agent.transform.position += Vector3.zero;
+                houseGuardData.value.houseGuardStateText.text = "House Guard State: Interacting with castle guard";
+
+                // Don't move the house guard
+                agent.transform.position += Vector3.zero;
 
 				// Increment both the house guard and castle guard interaction level sliders
 				houseGuardData.value.houseGuardInteractionSlider.value +=
@@ -44,7 +47,7 @@ namespace NodeCanvas.Tasks.Actions {
 			// Otherwise, move towards the castle guard
 			else
 			{
-				agent.transform.position += (houseGuardData.value.castleGuard.transform.position -
+                agent.transform.position += (houseGuardData.value.castleGuard.transform.position -
 					agent.transform.position).normalized * houseGuardData.value.moveToCastleGuardSpeed * Time.deltaTime;
 			}
 

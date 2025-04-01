@@ -2,6 +2,7 @@ using NodeCanvas.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CastleGuardData : MonoBehaviour
 {
@@ -18,4 +19,5 @@ public class CastleGuardData : MonoBehaviour
     public GameObject hitAlert;
     public GameObject swordPrefab;
     public GameObject castleGuardHand;
+    public Text castleGuardStateText;
 }

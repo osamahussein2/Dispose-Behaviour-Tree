@@ -27,6 +27,8 @@ namespace NodeCanvas.Tasks.Actions {
             // Make sure not show the hit alert and excalamation mark upon execution
             castleGuardData.value.hitAlert.SetActive(false);
             castleGuardData.value.exclamationMark.SetActive(false);
+
+            castleGuardData.value.castleGuardStateText.text = "Castle Guard State: Attack player by melee combat";
         }
 
 		//Called once per frame while the action is active.

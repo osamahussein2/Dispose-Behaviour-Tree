@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GarbageCollectorData : MonoBehaviour
 {
@@ -14,4 +15,5 @@ public class GarbageCollectorData : MonoBehaviour
     public Vector3 cameraOffset;
     public float garbageFallSpeed;
     public float playerMoveSpeed;
+    public Text playerStateText;
 }

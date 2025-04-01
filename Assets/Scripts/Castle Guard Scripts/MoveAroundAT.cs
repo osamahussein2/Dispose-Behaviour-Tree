@@ -40,6 +40,8 @@ namespace NodeCanvas.Tasks.Actions {
             castleGuardData.value.hitAlert.SetActive(false);
 
 			agent.transform.rotation = Quaternion.identity;
+
+			castleGuardData.value.castleGuardStateText.text = "Castle Guard State: Moving around castle";
         }
 
 		//Called once per frame while the action is active.
@@ -80,12 +82,16 @@ namespace NodeCanvas.Tasks.Actions {
 			// If the colliders are not found, hide the question mark
             if (castleGuardColliders.Length == 0)
             {
+                castleGuardData.value.castleGuardStateText.text = "Castle Guard State: Moving around castle";
+
                 castleGuardData.value.questionMark.SetActive(false);
             }
 
             // Once it gets the target colliders, show the question mark
             foreach (Collider collider in castleGuardColliders)
             {
+                castleGuardData.value.castleGuardStateText.text = "Castle Guard State: What's that?";
+
                 // Activate the question mark above their head
                 castleGuardData.value.questionMark.SetActive(true);
             }
