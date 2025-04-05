@@ -1,6 +1,6 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
-
+using Unity.VisualScripting;
 
 namespace NodeCanvas.Tasks.Conditions {
 
@@ -36,12 +36,10 @@ namespace NodeCanvas.Tasks.Conditions {
 		//Return whether the condition is success or failure.
 		protected override bool OnCheck() 
 		{
-
-
 			return houseGuardData.value.houseGuardInteractionSlider.value <= 
-				houseGuardData.value.lowInteractionLevelValue || 
+				houseGuardData.value.lowInteractionLevelValue && !houseGuardData.value.castleGuard.IsDestroyed() || 
 				houseGuardData.value.castleGuardInteractionSlider.value <= 
-				houseGuardData.value.lowInteractionLevelValue;
+				houseGuardData.value.lowInteractionLevelValue && !houseGuardData.value.castleGuard.IsDestroyed();
 		}
 	}
 }

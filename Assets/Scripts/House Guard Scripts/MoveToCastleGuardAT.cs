@@ -2,7 +2,7 @@ using NodeCanvas.Framework;
 using ParadoxNotion.Design;
 using UnityEditor.Rendering;
 using UnityEngine;
-
+using Unity.VisualScripting;
 
 namespace NodeCanvas.Tasks.Actions {
 
@@ -28,6 +28,7 @@ namespace NodeCanvas.Tasks.Actions {
             houseGuardData.value.lookingAlert.SetActive(false);
             houseGuardData.value.movingToCastleGuardAlert.SetActive(true);
             houseGuardData.value.interactingWithCastleGuardAlert.SetActive(false);
+            houseGuardData.value.hitAlert.SetActive(false);
 
             agent.transform.rotation = Quaternion.identity;
         }
@@ -36,7 +37,8 @@ namespace NodeCanvas.Tasks.Actions {
 		protected override void OnUpdate()
 		{
 			// If the distance between the house guard and castle guard are close enough
-			if (Vector3.Distance(agent.transform.position, houseGuardData.value.castleGuard.transform.position) <=
+			if (!houseGuardData.value.castleGuard.IsDestroyed() && 
+				Vector3.Distance(agent.transform.position, houseGuardData.value.castleGuard.transform.position) <=
 				houseGuardData.value.distanceToCastleGuard)
 			{
 				houseGuardData.value.houseGuardStateText.text = "House Guard State: Interacting with castle guard";
@@ -57,7 +59,9 @@ namespace NodeCanvas.Tasks.Actions {
 			}
 
 			// Otherwise, move towards the castle guard
-			else
+			else if (!houseGuardData.value.castleGuard.IsDestroyed() &&
+                Vector3.Distance(agent.transform.position, houseGuardData.value.castleGuard.transform.position) >
+                houseGuardData.value.distanceToCastleGuard)
 			{
 				agent.transform.position += (houseGuardData.value.castleGuard.transform.position -
 					agent.transform.position).normalized * houseGuardData.value.moveToCastleGuardSpeed * Time.deltaTime;
@@ -75,7 +79,8 @@ namespace NodeCanvas.Tasks.Actions {
 			if (houseGuardData.value.houseGuardInteractionSlider.value >=
 				houseGuardData.value.houseGuardInteractionSlider.maxValue &&
 				houseGuardData.value.castleGuardInteractionSlider.value >=
-				houseGuardData.value.castleGuardInteractionSlider.maxValue)
+				houseGuardData.value.castleGuardInteractionSlider.maxValue || 
+				houseGuardData.value.castleGuard.IsDestroyed())
 			{
 				// And hide the signifiers related to castle guard alerts
                 houseGuardData.value.movingToCastleGuardAlert.SetActive(false);

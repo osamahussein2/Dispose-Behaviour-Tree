@@ -8,6 +8,7 @@ namespace NodeCanvas.Tasks.Actions {
 	public class MeleeAttackAT : ActionTask {
 
         public BBParameter<CastleGuardData> castleGuardData;
+        public BBParameter<GarbageCollectorData> garbageCollectorData;
 
         private float timer;
 
@@ -63,6 +64,8 @@ namespace NodeCanvas.Tasks.Actions {
                 {
                     // Make the sword appear in their hand
                     sword = Object.Instantiate(castleGuardData.value.swordPrefab, agent.transform.position, Quaternion.identity);
+
+                    garbageCollectorData.value.garbageCollectorHealth.value -= 5.0f;
 
                     castleGuardData.value.hitAlert.SetActive(true); // Show the hit alert above the player
 

@@ -1,4 +1,5 @@
 using NodeCanvas.Framework;
+using NodeCanvas.Tasks.Actions;
 using ParadoxNotion.Design;
 using UnityEngine;
 
@@ -27,10 +28,11 @@ namespace NodeCanvas.Tasks.Conditions {
 		//Return whether the condition is success or failure.
 		protected override bool OnCheck()
 		{
-			// Check if the player is holding any of the movement keys for behaviour transition
+			// Check if the player is holding any of the movement/attack keys for behaviour transition
 			return Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W) ||
 				Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) ||
-				Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow);
+				Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || 
+				Input.GetKey(KeyCode.Space);
 		}
 	}
 }

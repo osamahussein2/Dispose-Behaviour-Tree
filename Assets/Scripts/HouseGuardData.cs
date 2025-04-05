@@ -34,4 +34,25 @@ public class HouseGuardData : MonoBehaviour
     public GameObject interactingWithCastleGuardAlert;
     public float houseGuardSliderValue;
     public float castleGuardSliderValue;
+    public GameObject hitAlert;
+
+    // Variables for updating the house guard no matter what their current state is
+    public static Slider houseGuardHealth;
+
+    private void Start()
+    {
+        // Get the house guard's health slider before setting its value to maximum
+        houseGuardHealth = GameObject.Find("House Guard Health Slider").GetComponent<Slider>();
+
+        if (houseGuardHealth != null) houseGuardHealth.value = houseGuardHealth.maxValue;
+    }
+
+    private void Update()
+    {
+        // If the house guard's health goes below 0, destroy house guard
+        if (houseGuardHealth.value <= 0.0f)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
