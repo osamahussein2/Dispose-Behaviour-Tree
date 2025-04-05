@@ -33,6 +33,13 @@ namespace NodeCanvas.Tasks.Actions {
 			houseGuardBlackboard.SetVariableValue("PlayerFound", playerFound);
 
             houseGuardData.value.houseGuardStateText.text = "House Guard State: Looking around";
+
+			houseGuardData.value.shootingAlert.SetActive(false);
+			houseGuardData.value.lookingAlert.SetActive(true);
+			houseGuardData.value.movingToCastleGuardAlert.SetActive(false);
+            houseGuardData.value.interactingWithCastleGuardAlert.SetActive(false);
+
+			agent.transform.rotation = Quaternion.identity;
         }
 
 		//Called once per frame while the action is active.
@@ -71,6 +78,12 @@ namespace NodeCanvas.Tasks.Actions {
 			{
 				timer = 0.0f;
 			}
+
+			// Hide the looking alert after the timer exceeds 1
+			if (timer >= 1.0f)
+			{
+                houseGuardData.value.lookingAlert.SetActive(false);
+            }
 		}
 
 		private void ChangeRotationDirection()
@@ -98,6 +111,7 @@ namespace NodeCanvas.Tasks.Actions {
                 if (Vector3.Distance(agent.transform.position, houseGuardData.value.houseLocation.transform.position)
                 <= 0.05f)
 				{
+                    houseGuardData.value.lookingAlert.SetActive(false);
                     EndAction(true);
 				}
 			}

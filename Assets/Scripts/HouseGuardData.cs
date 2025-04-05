@@ -28,4 +28,10 @@ public class HouseGuardData : MonoBehaviour
     public GameObject houseLocation;
     public float houseGuardSpeed;
     public Text houseGuardStateText;
+    public GameObject shootingAlert;
+    public GameObject lookingAlert;
+    public GameObject movingToCastleGuardAlert;
+    public GameObject interactingWithCastleGuardAlert;
+    public float houseGuardSliderValue;
+    public float castleGuardSliderValue;
 }

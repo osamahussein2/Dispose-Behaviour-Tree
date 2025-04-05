@@ -26,6 +26,11 @@ namespace NodeCanvas.Tasks.Actions {
             timer = 0.0f;
 
             houseGuardData.value.houseGuardStateText.text = "House Guard State: Shooting player";
+
+            houseGuardData.value.shootingAlert.SetActive(true);
+            houseGuardData.value.lookingAlert.SetActive(false);
+            houseGuardData.value.movingToCastleGuardAlert.SetActive(false);
+            houseGuardData.value.interactingWithCastleGuardAlert.SetActive(false);
         }
 
 		//Called once per frame while the action is active.
@@ -44,7 +49,9 @@ namespace NodeCanvas.Tasks.Actions {
 			// Spawn the bullet after the timer exceeds the firing cooldown time
 			if (timer >= houseGuardData.value.bulletFireCooldownTimer)
 			{
-				bullet = Object.Instantiate(houseGuardData.value.bulletPrefab, agent.transform.position, 
+                houseGuardData.value.shootingAlert.SetActive(false); // Hide the shooting alert too
+
+                bullet = Object.Instantiate(houseGuardData.value.bulletPrefab, agent.transform.position, 
 					agent.transform.rotation);
 
                 timer = 0.0f; // Reset timer to 0
@@ -83,6 +90,8 @@ namespace NodeCanvas.Tasks.Actions {
 			if (Vector3.Distance(agent.transform.position, houseGuardData.value.player.transform.position) >= 
 				houseGuardData.value.houseGuardRadius)
 			{
+                houseGuardData.value.shootingAlert.SetActive(false); // Hide the shooting alert
+
                 Object.Destroy(bullet);
                 EndAction(true); // And end this action too
 			}
